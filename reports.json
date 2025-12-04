@@ -1,0 +1,31 @@
+{
+  "extracted": [
+    {
+      "source_pdf": "sample_pdf_1.pdf",
+      "invoice_number": "AUFNR34343",
+      "seller_name": "Abc Corporation",
+      "buyer_name": "Beispielname Unternehmen",
+      "invoice_date": "2024-05-22",
+      "currency": "EUR",
+      "net_total": null,
+      "tax_amount": 76.16,
+      "gross_total": 64.0,
+      "line_items": []
+    }
+  ],
+  "validation": {
+    "results": [
+      {
+        "invoice_id": "AUFNR34343",
+        "is_valid": true,
+        "errors": []
+      }
+    ],
+    "summary": {
+      "total_invoices": 1,
+      "valid_invoices": 1,
+      "invalid_invoices": 0,
+      "error_counts": {}
+    }
+  }
+}
