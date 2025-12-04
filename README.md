@@ -85,6 +85,31 @@ Invoice_qc_service/
 
 ### Line Item Model
 
+```
+| Field         | Description             |
+| ------------- | ----------------------- |
+| `description` | Product or service name |
+| `quantity`    | Number of units         |
+| `unit_price`  | Price per unit          |
+| `line_total`  | Row total               |
+```
+## Validation Rules
+
+- The QC Validator applies multiple categories of rules:
+  
+  ### 1. Completeness Rules
+
+  ```
+  
+  Rule
+| ---------------------------------- |
+| `invoice_number` must not be empty |
+| `seller_name` must not be empty    |
+| `buyer_name` must not be empty     |
+| `invoice_date` must not be empty   |
+| `gross_total` must not be empty    |
+```
+  
 
 
 
