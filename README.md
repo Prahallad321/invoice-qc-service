@@ -62,56 +62,140 @@ Invoice_qc_service/
 └── README.md
 ```
 
+
+
+
+---
+
 ## Invoice Schema
 
-- Each invoice is normalized into the following structure using Pydantic models.
+Each PDF is normalized into a Pydantic model.
 
-  ### Invoice Model
+### Core Fields
 
-```
-| Field            | Description                            |
-| ---------------- | -------------------------------------- |
-| `source_pdf`     | Original PDF filename                  |
-| `invoice_number` | Unique invoice identifier              |
-| `seller_name`    | Company issuing the invoice            |
-| `buyer_name`     | Recipient / customer company           |
-| `invoice_date`   | Invoice issue date                     |
-| `currency`       | ISO currency code (EUR, USD, INR etc.) |
-| `net_total`      | Pre-tax amount                         |
-| `tax_amount`     | VAT/GST amount                         |
-| `gross_total`    | Total payable amount                   |
-| `line_items[]`   | Optional item rows                     |
-```
+| Field | Description |
+|------|---------------|
+| `source_pdf` | Original file name |
+| `invoice_number` | Unique invoice reference |
+| `seller_name` | Seller company name |
+| `buyer_name` | Buyer company name |
+| `invoice_date` | Issue date |
+| `currency` | ISO currency code |
+| `net_total` | Pre-tax amount |
+| `tax_amount` | VAT / GST tax |
+| `gross_total` | Final total |
 
-### Line Item Model
+### Line Items (optional)
 
-```
-| Field         | Description             |
-| ------------- | ----------------------- |
-| `description` | Product or service name |
-| `quantity`    | Number of units         |
-| `unit_price`  | Price per unit          |
-| `line_total`  | Row total               |
-```
+| Field | Description |
+|-------|---------------|
+| `description` | Item name |
+| `quantity` | Units |
+| `unit_price` | Price per unit |
+| `line_total` | Item total |
+
+---
+
 ## Validation Rules
 
-- The QC Validator applies multiple categories of rules:
-  
-  ### 1. Completeness Rules
+### 1. Completeness Rules
 
-  ```
-  
-  Rule
-| ---------------------------------- |
-| `invoice_number` must not be empty |
-| `seller_name` must not be empty    |
-| `buyer_name` must not be empty     |
-| `invoice_date` must not be empty   |
-| `gross_total` must not be empty    |
+- `invoice_number` must exist  
+- `buyer_name` must exist  
+- `seller_name` must exist  
+- `invoice_date` must exist  
+- `gross_total` must exist  
+
+---
+
+### 2. Formatting Rules
+
+- `invoice_date` must be parseable  
+- Currency must be supported (EUR, USD, INR)  
+- Monetary values must be numeric and positive
+
+---
+
+### 3. Business Rules
+
+- `net_total + tax_amount ≈ gross_total`
+- Negative totals are invalid
+
+---
+
+### 4. Anomaly Detection
+
+- Duplicate `invoice_number`
+- Invoice date range sanity check
+
+---
+
+## CLI Usage
+
+### Install
+
+```bash
+pip install -r requirements.txt
 ```
-  
+
+## JSON Report Example
+
+```bash
+{
+  "invoice_number": "AUFNR234953",
+  "buyer_name": "Example AG",
+  "seller_name": "JKL Corporation",
+  "invoice_date": "2022-05-02",
+  "currency": "EUR",
+  "net_total": 216.00,
+  "tax_amount": 41.04,
+  "gross_total": 257.04
+}
+```
+
+# API Usage
+
+## Start Server
+
+```bash
+uvicorn invoice_qc.api:app --reload
+```
+
+## Streamlit UI
+
+```bash
+streamlit run streamlit_app.py
+```
+
+## Setup Steps
+
+### Create Virtual Environment
+
+```bash
+python -m venv venv
+venv\Scripts\Activate.ps1
+```
+
+### Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
 
 
+## Features
+
+-Upload multiple invoice PDFs
+
+-Save them locally into pdfs/
+
+-Run extraction & validation via FastAPI
+
+-Show summary metrics and error tables
+
+-Download validated invoice PDFs
 
 
 
